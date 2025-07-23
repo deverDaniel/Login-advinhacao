@@ -135,20 +135,32 @@ end;
 
 
 //pede login e senha e chama o verificar senha
-procedure fazer_login;
+function fazer_login: boolean;
 var usuario, senha: String;
+    tentativas: Integer;
 begin
-  LimparConsole;
-  WriteLn('Digite seu usuário');
-  ReadLn(usuario);
-  WriteLn('Digite sua senha');
-  ReadLn(senha);
-  if (verifica_login(usuario,senha)) then begin
-    WriteLn('usuario logado com sucesso');
-  end else begin
-    WriteLn('Usuario ou senha incorreto');
-  end;
+  tentativas:= 3;
+  repeat
+    LimparConsole;
+    WriteLn('Digite seu usuário');
+    ReadLn(usuario);
+    WriteLn('Digite sua senha');
+    ReadLn(senha);
+    if (verifica_login(usuario,senha)) then begin
+      WriteLn('usuario logado com sucesso');
+      result:= True;
+      sleep(1500);
+      exit;
+    end else begin
+      WriteLn('Usuario ou senha incorreto');
+      tentativas:= tentativas-1;
+    end;
+    sleep(1500);
+  until tentativas <= 0;
+  WriteLn('Errou login 3 vezes, encerrando...');
   sleep(1500);
+  result:= False;
+
 end;
 
 function opcao_menu: Boolean;
@@ -157,8 +169,7 @@ begin
   ReadLn(opcao);
 
   if (opcao = '1') then begin
-      fazer_login;
-      result:= True;
+      result:= fazer_login;
   end else if (opcao = '2') then begin
     advinha_num;
     Sleep(1500);
@@ -191,16 +202,24 @@ begin
   WriteLn('| 3 - Termo         |');
   WriteLn('| 9 - sair          |');
   WriteLn('---------------------');
-
-
-
 end;
+
+procedure Menu_login;
+begin
+  LimparConsole;
+  WriteLn('--------Menu---------');
+  WriteLn('|                   |');
+  WriteLn('| 1 - Login         |');
+  WriteLn('| 9 - sair          |');
+  WriteLn('---------------------');
+end;
+
+
 begin
   try
     menu;
     While(opcao_menu) do begin
       Menu;
-
     end;
 
 
